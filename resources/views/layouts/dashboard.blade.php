@@ -9,53 +9,71 @@
 </head>
 
 <body class="bg-slate-100 text-slate-800">
-    <div class="min-h-screen flex">
-        <!-- Sidebar -->
-        <aside class="w-72 bg-[#0b0f14] text-white flex flex-col justify-between shadow-2xl">
+    <div class="flex">
+
+        <!-- Sidebar fijo -->
+        <aside class="fixed top-0 left-0 h-screen w-72 bg-[#0b0f14] text-white flex flex-col justify-between shadow-2xl z-50">
             <div>
                 <div class="px-8 py-7 border-b border-white/10">
                     <h1 class="text-2xl font-bold tracking-wide">Dark</h1>
                 </div>
 
+                @php
+                    $seccion = request()->routeIs('dashboard')    ? 'dashboard'
+                             : (request()->routeIs('proyectos.*') ? 'proyectos'
+                             : (request()->routeIs('bugs.*')      ? 'bugs'
+                             : (request()->routeIs('pruebas.*')   ? 'pruebas'
+                             : (request()->routeIs('metricas.*')  ? 'metricas'
+                             : (request()->routeIs('calidad.*')   ? 'calidad'
+                             : (request()->routeIs('usuarios.*')  ? 'usuarios' : ''))))));
+                @endphp
+
                 <nav class="mt-6 px-4 space-y-2">
                     <a href="{{ route('dashboard') }}"
-                        class="flex items-center gap-3 rounded-xl px-4 py-3 bg-white/10 text-white font-medium">
+                        class="flex items-center gap-3 rounded-xl px-4 py-3 transition
+                            {{ $seccion === 'dashboard' ? 'bg-white/10 text-white font-semibold' : 'text-slate-300 hover:bg-white/10 hover:text-white' }}">
                         <span>▦</span>
                         <span>Dashboard</span>
                     </a>
 
                     <a href="#"
-                        class="flex items-center gap-3 rounded-xl px-4 py-3 text-slate-300 hover:bg-white/10 hover:text-white transition">
+                        class="flex items-center gap-3 rounded-xl px-4 py-3 transition
+                            {{ $seccion === 'proyectos' ? 'bg-white/10 text-white font-semibold' : 'text-slate-300 hover:bg-white/10 hover:text-white' }}">
                         <span>•</span>
                         <span>Proyectos</span>
                     </a>
 
-                    <a href="#"
-                        class="flex items-center gap-3 rounded-xl px-4 py-3 text-slate-300 hover:bg-white/10 hover:text-white transition">
+                    <a href="{{ route('bugs.index') }}"
+                        class="flex items-center gap-3 rounded-xl px-4 py-3 transition
+                            {{ $seccion === 'bugs' ? 'bg-white/10 text-white font-semibold' : 'text-slate-300 hover:bg-white/10 hover:text-white' }}">
                         <span>•</span>
                         <span>Bugs</span>
                     </a>
 
                     <a href="#"
-                        class="flex items-center gap-3 rounded-xl px-4 py-3 text-slate-300 hover:bg-white/10 hover:text-white transition">
+                        class="flex items-center gap-3 rounded-xl px-4 py-3 transition
+                            {{ $seccion === 'pruebas' ? 'bg-white/10 text-white font-semibold' : 'text-slate-300 hover:bg-white/10 hover:text-white' }}">
                         <span>•</span>
                         <span>Pruebas</span>
                     </a>
 
                     <a href="#"
-                        class="flex items-center gap-3 rounded-xl px-4 py-3 text-slate-300 hover:bg-white/10 hover:text-white transition">
+                        class="flex items-center gap-3 rounded-xl px-4 py-3 transition
+                            {{ $seccion === 'metricas' ? 'bg-white/10 text-white font-semibold' : 'text-slate-300 hover:bg-white/10 hover:text-white' }}">
                         <span>•</span>
                         <span>Métricas</span>
                     </a>
 
                     <a href="#"
-                        class="flex items-center gap-3 rounded-xl px-4 py-3 text-slate-300 hover:bg-white/10 hover:text-white transition">
+                        class="flex items-center gap-3 rounded-xl px-4 py-3 transition
+                            {{ $seccion === 'calidad' ? 'bg-white/10 text-white font-semibold' : 'text-slate-300 hover:bg-white/10 hover:text-white' }}">
                         <span>•</span>
                         <span>Calidad</span>
                     </a>
 
                     <a href="{{ route('usuarios.index') }}"
-                        class="flex items-center gap-3 rounded-xl px-4 py-3 text-slate-300 hover:bg-white/10 hover:text-white transition">
+                        class="flex items-center gap-3 rounded-xl px-4 py-3 transition
+                            {{ $seccion === 'usuarios' ? 'bg-white/10 text-white font-semibold' : 'text-slate-300 hover:bg-white/10 hover:text-white' }}">
                         <span>•</span>
                         <span>Usuarios</span>
                     </a>
@@ -74,8 +92,8 @@
             </div>
         </aside>
 
-        <!-- Main content -->
-        <main class="flex-1 min-h-screen">
+        <!-- Main content (margen = ancho del sidebar fijo) -->
+        <main class="flex-1 min-h-screen ml-72">
             <!-- Topbar -->
             <header class="h-24 bg-white border-b border-slate-200 flex items-center justify-between px-8">
                 <div>

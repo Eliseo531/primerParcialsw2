@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\BugController;
 use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsuarioController;
@@ -23,4 +24,14 @@ Route::middleware('auth')->group(function () {
     Route::post('/usuarios', [UsuarioController::class, 'store'])->name('usuarios.store');
     Route::get('/usuarios/{usuario}/editar', [UsuarioController::class, 'edit'])->name('usuarios.edit');
     Route::put('/usuarios/{usuario}', [UsuarioController::class, 'update'])->name('usuarios.update');
+
+    // Gestión de bugs
+    Route::get('/bugs', [BugController::class, 'index'])->name('bugs.index');
+    Route::get('/bugs/crear', [BugController::class, 'create'])->name('bugs.create');
+    Route::post('/bugs', [BugController::class, 'store'])->name('bugs.store');
+    Route::get('/bugs/{bug}', [BugController::class, 'show'])->name('bugs.show');
+    Route::get('/bugs/{bug}/editar', [BugController::class, 'edit'])->name('bugs.edit');
+    Route::put('/bugs/{bug}', [BugController::class, 'update'])->name('bugs.update');
+    Route::post('/bugs/{bug}/asignar', [BugController::class, 'asignar'])->name('bugs.asignar');
+    Route::post('/bugs/{bug}/estado', [BugController::class, 'cambiarEstado'])->name('bugs.cambiarEstado');
 });
