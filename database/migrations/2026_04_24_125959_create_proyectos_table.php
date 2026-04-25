@@ -7,18 +7,23 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void
     {
-        // Tabla stub creada por el módulo de Bugs como dependencia temporal.
-        // TODO: el responsable de Gestión de Proyectos debe agregar las columnas
-        // que necesite mediante una nueva migración (no modificar esta).
-        Schema::create('proyectos', function (Blueprint $table) {
+        Schema::create("proyectos", function (Blueprint $table) {
             $table->id();
-            $table->string('nombre', 150);
+            $table->string("nombre", 150);
+            $table->text("descripcion")->nullable();
+            $table->string("estado", 30)->default("activo");
+            $table
+                ->foreignId("created_by")
+                ->constrained("usuarios")
+                ->restrictOnDelete();
             $table->timestamps();
+
+            $table->index("created_by");
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('proyectos');
+        Schema::dropIfExists("proyectos");
     }
 };

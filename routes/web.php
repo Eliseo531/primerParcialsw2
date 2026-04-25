@@ -5,6 +5,7 @@ use App\Http\Controllers\BugController;
 use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsuarioController;
+use App\Http\Controllers\ProyectoController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -34,4 +35,15 @@ Route::middleware('auth')->group(function () {
     Route::put('/bugs/{bug}', [BugController::class, 'update'])->name('bugs.update');
     Route::post('/bugs/{bug}/asignar', [BugController::class, 'asignar'])->name('bugs.asignar');
     Route::post('/bugs/{bug}/estado', [BugController::class, 'cambiarEstado'])->name('bugs.cambiarEstado');
+    // Gestión de proyectos
+    Route::get('/proyectos', [ProyectoController::class, 'index'])->name('proyectos.index'); 
+    Route::get('/proyectos/crear', [ProyectoController::class, 'create'])->name('proyectos.create');
+    Route::post('/proyectos', [ProyectoController::class, 'store'])->name('proyectos.store');
+    Route::get('/proyectos/{proyecto}/editar', [ProyectoController::class, 'edit'])->name('proyectos.edit');
+    Route::put('/proyectos/{proyecto}', [ProyectoController::class, 'update'])->name('proyectos.update');
+    Route::delete('/proyectos/{proyecto}', [ProyectoController::class, 'destroy'])->name('proyectos.destroy');
+
+    // Asignar miembros
+    Route::post('/proyectos/{proyecto}/miembros', [ProyectoController::class, 'asignarMiembros'])->name('proyectos.miembros');
+
 });

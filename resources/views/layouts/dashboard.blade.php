@@ -36,7 +36,7 @@
                         <span>Dashboard</span>
                     </a>
 
-                    <a href="#"
+                    <a href="{{ route('proyectos.index') }}"
                         class="flex items-center gap-3 rounded-xl px-4 py-3 transition
                             {{ $seccion === 'proyectos' ? 'bg-white/10 text-white font-semibold' : 'text-slate-300 hover:bg-white/10 hover:text-white' }}">
                         <span>•</span>
