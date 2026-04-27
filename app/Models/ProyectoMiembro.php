@@ -14,6 +14,17 @@ class ProyectoMiembro extends Model
 
     protected $fillable = ["proyecto_id", "usuario_id", "fecha_asignacion"];
 
+    protected $attributes = [
+        'fecha_asignacion' => null,
+    ];
+
+    protected static function booted(): void
+    {
+        static::creating(function (self $model) {
+            $model->fecha_asignacion ??= now()->toDateString();
+        });
+    }
+
     protected $casts = [
         "fecha_asignacion" => "date",
     ];

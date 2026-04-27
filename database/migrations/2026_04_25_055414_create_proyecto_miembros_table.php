@@ -17,7 +17,7 @@ return new class extends Migration {
                 ->foreignId("usuario_id")
                 ->constrained("usuarios")
                 ->cascadeOnDelete();
-            $table->date("fecha_asignacion")->useCurrent();
+            $table->date("fecha_asignacion")->nullable();
             $table->timestamps();
 
             $table->unique(["proyecto_id", "usuario_id"]);

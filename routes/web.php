@@ -2,7 +2,9 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\BugController;
+use App\Http\Controllers\CasoPruebaController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\EjecucionPruebaController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\ProyectoController;
@@ -45,5 +47,16 @@ Route::middleware('auth')->group(function () {
 
     // Asignar miembros
     Route::post('/proyectos/{proyecto}/miembros', [ProyectoController::class, 'asignarMiembros'])->name('proyectos.miembros');
+
+    // Gestión de pruebas
+    Route::get('/pruebas', [CasoPruebaController::class, 'index'])->name('pruebas.index');
+    Route::get('/pruebas/historial', [EjecucionPruebaController::class, 'index'])->name('pruebas.historial');
+    Route::get('/pruebas/crear', [CasoPruebaController::class, 'create'])->name('pruebas.create');
+    Route::post('/pruebas', [CasoPruebaController::class, 'store'])->name('pruebas.store');
+    Route::get('/pruebas/{caso}', [CasoPruebaController::class, 'show'])->name('pruebas.show');
+    Route::get('/pruebas/{caso}/editar', [CasoPruebaController::class, 'edit'])->name('pruebas.edit');
+    Route::put('/pruebas/{caso}', [CasoPruebaController::class, 'update'])->name('pruebas.update');
+    Route::get('/pruebas/{caso}/ejecutar', [EjecucionPruebaController::class, 'create'])->name('pruebas.ejecutar');
+    Route::post('/pruebas/{caso}/ejecutar', [EjecucionPruebaController::class, 'store'])->name('pruebas.ejecutar.store');
 
 });

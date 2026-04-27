@@ -50,7 +50,7 @@
                         <span>Bugs</span>
                     </a>
 
-                    <a href="#"
+                    <a href="{{ route('pruebas.index') }}"
                         class="flex items-center gap-3 rounded-xl px-4 py-3 transition
                             {{ $seccion === 'pruebas' ? 'bg-white/10 text-white font-semibold' : 'text-slate-300 hover:bg-white/10 hover:text-white' }}">
                         <span>•</span>
