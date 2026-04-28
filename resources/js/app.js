@@ -2,53 +2,62 @@ import './bootstrap';
 import Chart from 'chart.js/auto';
 
 document.addEventListener('DOMContentLoaded', () => {
-    const bugsChartEl = document.getElementById('bugsChart');
-    if (bugsChartEl) {
-        new Chart(bugsChartEl, {
+    if (!window.dashboardData) return;
+
+    const bugsEstado = window.dashboardData.bugsEstado;
+    const bugsSeveridad = window.dashboardData.bugsSeveridad;
+    const pruebas = window.dashboardData.pruebas;
+
+    const bugsEstadoCanvas = document.getElementById('bugsEstadoChart');
+    if (bugsEstadoCanvas) {
+        new Chart(bugsEstadoCanvas, {
             type: 'bar',
             data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-                datasets: [
-                    {
-                        label: 'Bugs',
-                        data: [12, 19, 10, 15, 22, 18, 11, 9, 14, 21, 17, 20],
-                        borderRadius: 8,
-                    }
-                ]
+                labels: Object.keys(bugsEstado),
+                datasets: [{
+                    label: 'Cantidad',
+                    data: Object.values(bugsEstado),
+                    borderRadius: 8,
+                }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: true
-                    }
-                }
             }
         });
     }
 
-    const testsChartEl = document.getElementById('testsChart');
-    if (testsChartEl) {
-        new Chart(testsChartEl, {
+    const pruebasCanvas = document.getElementById('pruebasChart');
+    if (pruebasCanvas) {
+        new Chart(pruebasCanvas, {
             type: 'doughnut',
             data: {
-                labels: ['OK', 'FAIL'],
-                datasets: [
-                    {
-                        data: [83, 17],
-                    }
-                ]
+                labels: Object.keys(pruebas),
+                datasets: [{
+                    data: Object.values(pruebas),
+                }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
                 cutout: '70%',
-                plugins: {
-                    legend: {
-                        position: 'bottom'
-                    }
-                }
+            }
+        });
+    }
+
+    const severidadCanvas = document.getElementById('severidadChart');
+    if (severidadCanvas) {
+        new Chart(severidadCanvas, {
+            type: 'pie',
+            data: {
+                labels: Object.keys(bugsSeveridad),
+                datasets: [{
+                    data: Object.values(bugsSeveridad),
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
             }
         });
     }

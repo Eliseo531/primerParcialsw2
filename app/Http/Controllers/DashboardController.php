@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Auth;
+use App\Models\Bug;
+use App\Models\EjecucionPrueba;
+use App\Models\EvaluacionCalidad;
+use App\Models\Proyecto;
+use App\Models\Recomendacion;
 use Illuminate\View\View;
 
 class DashboardController extends Controller
@@ -10,53 +14,63 @@ class DashboardController extends Controller
     public function index(): View
     {
         $stats = [
-            'total_bugs' => 120,
-            'bugs_abiertos' => 45,
-            'bugs_cerrados' => 75,
-            'tasa_pruebas' => 83,
+            'total_proyectos' => Proyecto::count(),
+            'total_bugs' => Bug::count(),
+            'bugs_abiertos' => Bug::where('estado', 'abierto')->count(),
+            'bugs_cerrados' => Bug::where('estado', 'cerrado')->count(),
+            'pruebas_ok' => EjecucionPrueba::where('resultado', 'OK')->count(),
+            'pruebas_fail' => EjecucionPrueba::where('resultado', 'FAIL')->count(),
+            'recomendaciones_pendientes' => Recomendacion::where('estado', 'pendiente')->count(),
         ];
 
-        $recentBugs = [
-            [
-                'id' => 1,
-                'titulo' => 'Error al iniciar sesión',
-                'modulo' => 'Usuarios',
-                'severidad' => 'Alta',
-                'estado' => 'Abierto',
-                'asignado' => 'Carlos',
-            ],
-            [
-                'id' => 2,
-                'titulo' => 'Falla en cálculo de métricas',
-                'modulo' => 'Métricas',
-                'severidad' => 'Media',
-                'estado' => 'En proceso',
-                'asignado' => 'Ana',
-            ],
-            [
-                'id' => 3,
-                'titulo' => 'No carga gráfico principal',
-                'modulo' => 'Dashboard',
-                'severidad' => 'Baja',
-                'estado' => 'Cerrado',
-                'asignado' => 'Luis',
-            ],
+        $totalPruebas = $stats['pruebas_ok'] + $stats['pruebas_fail'];
+
+        $stats['tasa_pruebas'] = $totalPruebas > 0
+            ? round(($stats['pruebas_ok'] / $totalPruebas) * 100, 2)
+            : 0;
+
+        $bugsPorEstado = [
+            'Abiertos' => Bug::where('estado', 'abierto')->count(),
+            'En proceso' => Bug::where('estado', 'en_proceso')->count(),
+            'Cerrados' => Bug::where('estado', 'cerrado')->count(),
         ];
 
-        $activities = [
-            'Se registró el bug #45 en el módulo Usuarios',
-            'Se ejecutó una prueba con resultado FAIL',
-            'El bug #32 fue cerrado correctamente',
-            'Se generó una recomendación automática de mejora',
+        $bugsPorSeveridad = [
+            'Baja' => Bug::where('severidad', 'baja')->count(),
+            'Media' => Bug::where('severidad', 'media')->count(),
+            'Alta' => Bug::where('severidad', 'alta')->count(),
+            'Crítica' => Bug::where('severidad', 'critica')->count(),
         ];
 
-        $usuario = Auth::user();
+        $pruebasResultados = [
+            'OK' => $stats['pruebas_ok'],
+            'FAIL' => $stats['pruebas_fail'],
+        ];
+
+        $ultimosBugs = Bug::with(['proyecto', 'modulo', 'reportero', 'asignado'])
+            ->latest()
+            ->limit(5)
+            ->get();
+
+        $ultimasEvaluaciones = EvaluacionCalidad::with('proyecto')
+            ->latest('fecha_evaluacion')
+            ->limit(5)
+            ->get();
+
+        $recomendaciones = Recomendacion::with(['proyecto', 'modulo'])
+            ->where('estado', 'pendiente')
+            ->latest('fecha_generacion')
+            ->limit(5)
+            ->get();
 
         return view('dashboard.index', compact(
             'stats',
-            'recentBugs',
-            'activities',
-            'usuario'
+            'bugsPorEstado',
+            'bugsPorSeveridad',
+            'pruebasResultados',
+            'ultimosBugs',
+            'ultimasEvaluaciones',
+            'recomendaciones'
         ));
     }
 }
