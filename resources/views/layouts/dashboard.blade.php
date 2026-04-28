@@ -14,8 +14,21 @@
         $rol = $usuario->rol->nombre ?? null;
     @endphp
 
+    @php
+        $seccion = request()->routeIs('dashboard')               ? 'dashboard'
+                 : (request()->routeIs('proyectos.*')            ? 'proyectos'
+                 : (request()->routeIs('tareas.*')               ? 'tareas'
+                 : (request()->routeIs('bugs.*')                 ? 'bugs'
+                 : (request()->routeIs('casos-prueba.*')         ? 'pruebas'
+                 : (request()->routeIs('metricas.*')             ? 'metricas'
+                 : (request()->routeIs('evaluaciones-calidad.*') ? 'calidad'
+                 : (request()->routeIs('recomendaciones.*')      ? 'mejora'
+                 : (request()->routeIs('usuarios.*')             ? 'usuarios' : ''))))))));
+    @endphp
+
     <div class="min-h-screen flex">
-        <aside class="w-72 bg-[#0b0f14] text-white flex flex-col justify-between shadow-2xl">
+        {{-- Sidebar fijo --}}
+        <aside class="fixed top-0 left-0 h-screen w-72 bg-[#0b0f14] text-white flex flex-col justify-between shadow-2xl z-50 overflow-y-auto">
             <div>
                 <div class="px-8 py-7 border-b border-white/10">
                     <h1 class="text-2xl font-bold tracking-wide">Calidad SW</h1>
@@ -24,14 +37,16 @@
 
                 <nav class="mt-6 px-4 space-y-2">
                     <a href="{{ route('dashboard') }}"
-                        class="flex items-center gap-3 rounded-xl px-4 py-3 bg-white/10 text-white font-medium">
+                        class="flex items-center gap-3 rounded-xl px-4 py-3 transition
+                            {{ $seccion === 'dashboard' ? 'bg-white/10 text-white font-semibold' : 'text-slate-300 hover:bg-white/10 hover:text-white' }}">
                         <span>▦</span>
                         <span>Dashboard</span>
                     </a>
 
                     @if (in_array($rol, ['Administrador', 'Tester', 'Desarrollador']))
                         <a href="{{ route('proyectos.index') }}"
-                            class="flex items-center gap-3 rounded-xl px-4 py-3 text-slate-300 hover:bg-white/10 hover:text-white transition">
+                            class="flex items-center gap-3 rounded-xl px-4 py-3 transition
+                                {{ $seccion === 'proyectos' ? 'bg-white/10 text-white font-semibold' : 'text-slate-300 hover:bg-white/10 hover:text-white' }}">
                             <span>•</span>
                             <span>Proyectos</span>
                         </a>
@@ -39,21 +54,26 @@
 
                     @if (in_array($rol, ['Administrador', 'Desarrollador']))
                         <a href="{{ route('tareas.index') }}"
-                            class="flex items-center gap-3 rounded-xl px-4 py-3 text-slate-300 hover:bg-white/10 hover:text-white transition">
+                            class="flex items-center gap-3 rounded-xl px-4 py-3 transition
+                                {{ $seccion === 'tareas' ? 'bg-white/10 text-white font-semibold' : 'text-slate-300 hover:bg-white/10 hover:text-white' }}">
                             <span>•</span>
                             <span>Tareas</span>
                         </a>
                     @endif
 
-                    @if (in_array($rol, ['Administrador', 'Tester']))
+                    @if (in_array($rol, ['Administrador', 'Tester', 'Desarrollador']))
                         <a href="{{ route('bugs.index') }}"
-                            class="flex items-center gap-3 rounded-xl px-4 py-3 text-slate-300 hover:bg-white/10 hover:text-white transition">
+                            class="flex items-center gap-3 rounded-xl px-4 py-3 transition
+                                {{ $seccion === 'bugs' ? 'bg-white/10 text-white font-semibold' : 'text-slate-300 hover:bg-white/10 hover:text-white' }}">
                             <span>•</span>
                             <span>Bugs</span>
                         </a>
+                    @endif
 
+                    @if (in_array($rol, ['Administrador', 'Tester']))
                         <a href="{{ route('casos-prueba.index') }}"
-                            class="flex items-center gap-3 rounded-xl px-4 py-3 text-slate-300 hover:bg-white/10 hover:text-white transition">
+                            class="flex items-center gap-3 rounded-xl px-4 py-3 transition
+                                {{ $seccion === 'pruebas' ? 'bg-white/10 text-white font-semibold' : 'text-slate-300 hover:bg-white/10 hover:text-white' }}">
                             <span>•</span>
                             <span>Pruebas</span>
                         </a>
@@ -61,25 +81,29 @@
 
                     @if ($rol === 'Administrador')
                         <a href="{{ route('metricas.index') }}"
-                            class="flex items-center gap-3 rounded-xl px-4 py-3 text-slate-300 hover:bg-white/10 hover:text-white transition">
+                            class="flex items-center gap-3 rounded-xl px-4 py-3 transition
+                                {{ $seccion === 'metricas' ? 'bg-white/10 text-white font-semibold' : 'text-slate-300 hover:bg-white/10 hover:text-white' }}">
                             <span>•</span>
                             <span>Métricas</span>
                         </a>
 
                         <a href="{{ route('evaluaciones-calidad.index') }}"
-                            class="flex items-center gap-3 rounded-xl px-4 py-3 text-slate-300 hover:bg-white/10 hover:text-white transition">
+                            class="flex items-center gap-3 rounded-xl px-4 py-3 transition
+                                {{ $seccion === 'calidad' ? 'bg-white/10 text-white font-semibold' : 'text-slate-300 hover:bg-white/10 hover:text-white' }}">
                             <span>•</span>
                             <span>Calidad</span>
                         </a>
 
                         <a href="{{ route('recomendaciones.index') }}"
-                            class="flex items-center gap-3 rounded-xl px-4 py-3 text-slate-300 hover:bg-white/10 hover:text-white transition">
+                            class="flex items-center gap-3 rounded-xl px-4 py-3 transition
+                                {{ $seccion === 'mejora' ? 'bg-white/10 text-white font-semibold' : 'text-slate-300 hover:bg-white/10 hover:text-white' }}">
                             <span>•</span>
                             <span>Mejora continua</span>
                         </a>
 
                         <a href="{{ route('usuarios.index') }}"
-                            class="flex items-center gap-3 rounded-xl px-4 py-3 text-slate-300 hover:bg-white/10 hover:text-white transition">
+                            class="flex items-center gap-3 rounded-xl px-4 py-3 transition
+                                {{ $seccion === 'usuarios' ? 'bg-white/10 text-white font-semibold' : 'text-slate-300 hover:bg-white/10 hover:text-white' }}">
                             <span>•</span>
                             <span>Usuarios</span>
                         </a>
@@ -99,7 +123,8 @@
             </div>
         </aside>
 
-        <main class="flex-1 min-h-screen">
+        {{-- Contenido desplazado por el sidebar fijo --}}
+        <main class="flex-1 min-h-screen ml-72">
             <header class="h-24 bg-white border-b border-slate-200 flex items-center justify-between px-8">
                 <div>
                     <h2 class="text-3xl font-bold text-slate-800">

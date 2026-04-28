@@ -19,7 +19,7 @@ return new class extends Migration
                 ->constrained('usuarios')
                 ->cascadeOnDelete();
 
-            $table->date('fecha_asignacion')->useCurrent();
+            $table->date('fecha_asignacion')->nullable();
 
             $table->timestamps();
 
